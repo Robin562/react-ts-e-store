@@ -1,8 +1,9 @@
 import CartItem from "./CartItem";
 import { useCartGlobalContext } from "../context/CartProvider";
 import { CartItemType } from "../context/CartProvider";
+import { ReactElement } from "react";
 
-const Cart = () => {
+const Cart = (): ReactElement => {
   const { state } = useCartGlobalContext();
 
   return (

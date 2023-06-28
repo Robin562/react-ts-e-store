@@ -1,12 +1,11 @@
 import { SlClose } from "react-icons/sl";
-import { FaRupeeSign } from "react-icons/fa";
 import { CartItemType } from "../context/CartProvider";
 import { useProductsGlobalContext } from "../context/ProductsProvider";
 import { useCartGlobalContext } from "../context/CartProvider";
 import { ProductsType } from "../context/ProductsProvider";
 import { ReactElement } from "react";
 
-const CartItem = ({ qty, id, price }: CartItemType) => {
+const CartItem = ({ qty, id, price }: CartItemType): ReactElement => {
   const { products } = useProductsGlobalContext();
   const displayImageURL: string = new URL(
     `../images/${id}.jpg`,
@@ -15,7 +14,7 @@ const CartItem = ({ qty, id, price }: CartItemType) => {
 
   const addedItem = products.find((item) => item.id === id) as ProductsType;
 
-  const { imgURL, name }: ProductsType = addedItem;
+  const { name }: ProductsType = addedItem;
 
   const { dispatch, ACTIONS } = useCartGlobalContext();
   const checkQty = (num: number): void => {
@@ -24,6 +23,11 @@ const CartItem = ({ qty, id, price }: CartItemType) => {
   };
 
   const totalItemsPrice: number = qty * price;
+
+  const formattedTotalItemsPrice: string = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "INR",
+  }).format(totalItemsPrice);
 
   const getOptions = (maxOptionNumber: number): ReactElement[] => {
     const maxOptionValue: number =
@@ -37,14 +41,17 @@ const CartItem = ({ qty, id, price }: CartItemType) => {
     });
   };
 
+  const formattedPrice: string = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "INR",
+  }).format(price);
+
   return (
     <li className="cartItem">
       <img src={displayImageURL} className="cartItemImg" />
-      <p>{name}</p>
-      <p>
-        <FaRupeeSign /> {price}
-      </p>
-      <div className="cartItemQty">
+      <p className="cartItem__name">{name}</p>
+      <p className="cartItem__price">{formattedPrice}</p>
+      <div className="cartItem__Qty">
         <label className="offscreen">Qty:</label>
         <select
           className="cartItem__select"
@@ -64,9 +71,7 @@ const CartItem = ({ qty, id, price }: CartItemType) => {
           {getOptions(10)}
         </select>
       </div>
-      <p>
-        <FaRupeeSign /> {totalItemsPrice}
-      </p>
+      <p>{formattedTotalItemsPrice}</p>
       <button
         className="cart__removeBtn"
         onClick={() => {

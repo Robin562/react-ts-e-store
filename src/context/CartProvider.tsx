@@ -45,7 +45,7 @@ const initContextState: InitContextStateType = {
     totalItems: 0,
     totalPrice: 0,
   },
-  dispatch: (action: ActionType) => {},
+  dispatch: () => {},
   ACTIONS: {
     ADDITEM: "",
     REMOVEITEM: "",
@@ -95,9 +95,12 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         throw new Error("No payload provided in ACTIONS.UPDATEQTY");
       }
       const { id, qty }: { id: string; qty: number } = action.payload;
-      const updatedItem = state.cart.find(
+      const updatedItem: CartItemType | undefined = state.cart.find(
         (item) => item.id === id
-      ) as CartItemType;
+      );
+      if (!updatedItem) {
+        throw new Error("Item to update doesn't exist");
+      }
       updatedItem.qty = qty;
       return {
         ...state,
@@ -108,10 +111,9 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       throw new Error("Unidentified reducer action type");
   }
 };
+const CartContext = createContext<InitContextStateType>(initContextState);
 
-const CartContext = createContext(initContextState);
-
-const CartProvider = ({ children }: ChildrenType) => {
+const CartProvider = ({ children }: ChildrenType): ReactElement => {
   const [state, dispatch] = useReducer(reducer, initState);
   return (
     <CartContext.Provider value={{ state, dispatch, ACTIONS }}>
@@ -120,28 +122,26 @@ const CartProvider = ({ children }: ChildrenType) => {
   );
 };
 
-export const useTotalItemsAndQty = (): CartItemType => {
+export const useTotalItemsAndQty = () => {
   const {
     state: { cart },
   } = useCartGlobalContext();
 
-  const initialValue: CartItemType = {
-    id: "itemTotal",
-    price: 0,
-    qty: 0,
-  };
-  const totalItems: CartItemType = cart.reduce(
-    (acc: CartItemType, curr: CartItemType) => {
-      const indivItemTotalPrice = curr.qty * curr.price;
-      acc.price += indivItemTotalPrice;
-      acc.qty += curr.qty;
-      return acc;
-    },
-    initialValue
+  const totalItems: number = cart.reduce((acc, curr) => {
+    return acc + curr.qty;
+  }, 0);
+  const totalPrice: string = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "INR",
+  }).format(
+    cart.reduce((acc, curr) => {
+      return acc + curr.price * curr.qty;
+    }, 0)
   );
 
-  return totalItems;
+  return { totalItems, totalPrice };
 };
 
-export const useCartGlobalContext = () => useContext(CartContext);
+export const useCartGlobalContext = () =>
+  useContext<InitContextStateType>(CartContext);
 export default CartProvider;

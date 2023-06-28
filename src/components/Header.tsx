@@ -1,5 +1,4 @@
 import { useTotalItemsAndQty } from "../context/CartProvider";
-import { FaRupeeSign } from "react-icons/fa";
 
 type HeaderPropsType = {
   viewCart: boolean;
@@ -7,17 +6,16 @@ type HeaderPropsType = {
 };
 
 const Header = ({ viewCart, setViewCart }: HeaderPropsType) => {
-  const { price, qty } = useTotalItemsAndQty();
+  const { totalItems, totalPrice } = useTotalItemsAndQty();
 
   return (
     <header className="header">
       <h1 className="header__heading">STORE BUDDY</h1>
       <div className="header__infoAndBtn">
         <div className="header__info">
-          <p className="header__total">Total Items : {qty} </p>
-          <p className="header__total">
-            Total Price : <FaRupeeSign /> {price}
-          </p>
+          <p className="header__total">Total Items : {totalItems} </p>
+          <p className="header__total">Total Price :</p>
+          <p>{totalPrice}</p>
         </div>
         <button
           onClick={() => {

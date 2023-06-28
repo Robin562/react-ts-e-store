@@ -1,12 +1,6 @@
 {
   "products": [
     {
-      "id": "item001",
-      "name": "Quartz Watch",
-      "price": 2000,
-      "imgURL": "https://www.cnet.com/a/img/resize/c2fb79b15d18f335e85fc4acd72910059cc9758b/hub/2021/08/20/453e37bf-61cb-4e16-ad90-fd822bdc390a/keychron-k3-mechanical-keyboard.jpg?auto=webp&fit=crop&height=900&width=1200"
-    },
-    {
       "id": "item002",
       "name": "Digital Watch",
       "price": 4000,
@@ -17,6 +11,12 @@
       "name": "Smart Watch",
       "price": 8000,
       "imgURL": "https://m.media-amazon.com/images/I/81QPDCkR-WL._SL1500_.jpg"
+    },
+    {
+      "id": "item001",
+      "name": "Quartz Watch",
+      "price": 2000,
+      "imgURL": "https://www.cnet.com/a/img/resize/c2fb79b15d18f335e85fc4acd72910059cc9758b/hub/2021/08/20/453e37bf-61cb-4e16-ad90-fd822bdc390a/keychron-k3-mechanical-keyboard.jpg?auto=webp&fit=crop&height=900&width=1200"
     }
   ]
 }

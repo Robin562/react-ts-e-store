@@ -1,4 +1,4 @@
-import { FaCheck, FaRupeeSign, FaLongArrowAltRight } from "react-icons/fa";
+import { FaLongArrowAltRight } from "react-icons/fa";
 import { ProductsType } from "../context/ProductsProvider";
 import { useState, useEffect } from "react";
 import { useCartGlobalContext } from "../context/CartProvider";
@@ -9,30 +9,30 @@ const Item = ({ price, name, id }: ProductsType) => {
     import.meta.url
   ).href;
 
-  const [inCartClass, setInCartClass] = useState("");
   const {
     dispatch,
     ACTIONS: { ADDITEM },
+    state: { cart },
   } = useCartGlobalContext();
 
-  useEffect(() => {
-    setTimeout(() => setInCartClass(""), 600);
-  }, [inCartClass]);
+  let inCart: boolean = cart.some((item) => item.id === id);
+  const notif = inCart ? ` ⮕ In cart : ✔️` : null;
+
+  const formattedPrice: string = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "INR",
+  }).format(price);
 
   return (
     <li className="item">
       <h3>{name}</h3>
       <img src={displayImageURL} className="item__img" />
-      <p>
-        <FaRupeeSign /> {price}
-        <span className={`in-cart ${inCartClass}`}>
-          <FaLongArrowAltRight /> Item in Cart :{" "}
-          <FaCheck className="fa-check" />{" "}
-        </span>
-      </p>
+      <div>
+        <span className="item__price">{formattedPrice}</span>
+        <span className="item__notif">{notif}</span>
+      </div>
       <button
         onClick={() => {
-          setInCartClass("show-in-cart");
           dispatch({ type: ADDITEM, payload: { id, price, qty: 0 } });
         }}
       >
